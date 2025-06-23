@@ -14,5 +14,33 @@
  */
 package code.guru.lsp.client;
 
-public class SimpleLanguageClient {
+import org.eclipse.lsp4j.MessageActionItem;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.services.LanguageClient;
+
+import java.util.concurrent.CompletableFuture;
+
+public class SimpleLanguageClient implements LanguageClient {
+    @Override
+    public void telemetryEvent(Object object) {}
+
+    @Override
+    public void publishDiagnostics(org.eclipse.lsp4j.PublishDiagnosticsParams diagnostics) {
+        System.out.println("Diagnostics: " + diagnostics);
+    }
+
+    @Override
+    public void showMessage(org.eclipse.lsp4j.MessageParams messageParams) {
+        System.out.println("Message: " + messageParams.getMessage());
+    }
+
+    @Override
+    public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
+        return null;
+    }
+
+    @Override
+    public void logMessage(org.eclipse.lsp4j.MessageParams message) {
+        System.out.println("Log: " + message.getMessage());
+    }
 }

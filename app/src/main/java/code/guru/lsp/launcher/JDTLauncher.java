@@ -14,5 +14,20 @@
  */
 package code.guru.lsp.launcher;
 
+import java.io.*;
+import java.util.*;
+
 public class JDTLauncher {
+    public static Process startJDTLanguageServer(File workspace) throws IOException {
+        List<String> command = Arrays.asList(
+                "java", "-jar", "path/to/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_<version>.jar",
+                "-configuration", "path/to/config_linux", // or config_win/config_mac
+                "-data", workspace.getAbsolutePath()
+        );
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.redirectErrorStream(true);
+        return pb.start();
+    }
 }
+

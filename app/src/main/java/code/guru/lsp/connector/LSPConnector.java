@@ -14,5 +14,23 @@
  */
 package code.guru.lsp.connector;
 
+import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.launch.LSPLauncher;
+import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.lsp4j.services.LanguageServer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class LSPConnector {
+    public static LanguageServer connect(Process serverProcess, LanguageClient client) throws IOException {
+        InputStream in = serverProcess.getInputStream();
+        OutputStream out = serverProcess.getOutputStream();
+
+        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(client, in, out);
+        launcher.startListening();
+        return launcher.getRemoteProxy();
+    }
 }
+
