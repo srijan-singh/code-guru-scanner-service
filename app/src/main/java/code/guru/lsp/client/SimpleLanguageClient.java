@@ -12,16 +12,7 @@
  * GNU General Public License for more details:
  *     https://www.gnu.org/licenses/gpl-3.0.txt
  */
-package code.guru;
+package code.guru.lsp.client;
 
-public class ScannerService {
-
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new ScannerService().getGreeting());
-    }
+public class SimpleLanguageClient {
 }
-

@@ -7,8 +7,13 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
+    java
     application
 }
+
+
+group = "code.guru.lspclient"
+version = "1.0-SNAPSHOT"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -16,6 +21,13 @@ repositories {
 }
 
 dependencies {
+    val lsp4jVersion = "0.21.0"
+    val lombokVersion = "1.18.38"
+    // lsp4j
+    implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:${lsp4jVersion}")
+    // Lombok
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     // Use JUnit test framework.
     testImplementation(libs.junit)
 
