@@ -14,20 +14,72 @@
  */
 package code.guru.lsp.launcher;
 
-import java.io.*;
-import java.util.*;
+import code.guru.util.ApplicationProperties;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
+@Slf4j
+@NoArgsConstructor
 public class JDTLauncher {
-    public static Process startJDTLanguageServer(File workspace) throws IOException {
+
+    public static Process startJDTLanguageServer(File workspace, String jdtLsHome) throws IOException {
+        // Replace these with your actual path to JDT LS
+        File pluginsDir = new File(jdtLsHome, "plugins");
+
+        File launcherJar = findLauncherJar(pluginsDir);
+        if (launcherJar == null) {
+            log.error("Cannot find JDT LS launcher JAR in: {}", pluginsDir.getAbsolutePath());
+            throw new IOException("Cannot find JDT LS launcher JAR in: " + pluginsDir.getAbsolutePath());
+        }
+
+        File configDir = new File(jdtLsHome, "config_" + getPlatform());
+        if (!configDir.exists()) {
+            log.error("Cannot find config dir: {}", configDir.getAbsolutePath());
+            throw new IOException("Cannot find config dir: " + configDir.getAbsolutePath());
+        }
+
         List<String> command = Arrays.asList(
-                "java", "-jar", "path/to/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_<version>.jar",
-                "-configuration", "path/to/config_linux", // or config_win/config_mac
+                "java",
+                "-Declipse.application=org.eclipse.jdt.ls.core.mavenApplication", // maven project
+                "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+                "-Dosgi.bundles.defaultStartLevel=4",
+                "-Declipse.product=org.eclipse.jdt.ls.core.product",
+                "-noverify",
+                "-Xmx1G",
+                "-jar", launcherJar.getAbsolutePath(),
+                "-configuration", configDir.getAbsolutePath(),
                 "-data", workspace.getAbsolutePath()
         );
 
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.redirectErrorStream(true);
+
+        log.info("Starting JDT LS with command:");
+        command.forEach(log::info);
+
         return pb.start();
     }
-}
 
+    private static File findLauncherJar(File pluginsDir) {
+        if (!pluginsDir.exists() || !pluginsDir.isDirectory()) return null;
+
+        File[] files = pluginsDir.listFiles((dir, name) -> name.startsWith("org.eclipse.equinox.launcher") && name.endsWith(".jar"));
+        if (files == null || files.length == 0) return null;
+
+        // Pick the first one found (or sort for latest)
+        return files[0];
+    }
+
+    private static String getPlatform() {
+        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        if (os.contains("win")) return "win";
+        if (os.contains("mac")) return "mac";
+        return "linux"; // default to Linux
+    }
+}

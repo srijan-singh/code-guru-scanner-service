@@ -23,11 +23,17 @@ repositories {
 dependencies {
     val lsp4jVersion = "0.21.0"
     val lombokVersion = "1.18.38"
+    val sl4jfVersion = "2.0.13"
     // lsp4j
     implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:${lsp4jVersion}")
     // Lombok
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    // SLF4J API (required for @Slf4j to generate a valid logger)
+    implementation("org.slf4j:slf4j-api:${sl4jfVersion}") // or latest
+    // Add a logging implementation — like slf4j-simple or logback
+    runtimeOnly("org.slf4j:slf4j-simple:${sl4jfVersion}") // for
+
     // Use JUnit test framework.
     testImplementation(libs.junit)
 

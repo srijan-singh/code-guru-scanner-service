@@ -19,12 +19,11 @@ import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class LSPConnector {
-    public static LanguageServer connect(Process serverProcess, LanguageClient client) throws IOException {
+    public static LanguageServer connect(Process serverProcess, LanguageClient client) {
         InputStream in = serverProcess.getInputStream();
         OutputStream out = serverProcess.getOutputStream();
 

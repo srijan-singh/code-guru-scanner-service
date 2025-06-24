@@ -14,33 +14,41 @@
  */
 package code.guru.lsp.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.lsp4j.MessageActionItem;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 public class SimpleLanguageClient implements LanguageClient {
-    @Override
-    public void telemetryEvent(Object object) {}
 
     @Override
-    public void publishDiagnostics(org.eclipse.lsp4j.PublishDiagnosticsParams diagnostics) {
-        System.out.println("Diagnostics: " + diagnostics);
+    public void telemetryEvent(Object object) {
+        log.debug("Telemetry event: {}", object);
     }
 
     @Override
-    public void showMessage(org.eclipse.lsp4j.MessageParams messageParams) {
-        System.out.println("Message: " + messageParams.getMessage());
+    public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
+        log.info("Diagnostics: {}", diagnostics);
+    }
+
+    @Override
+    public void showMessage(MessageParams messageParams) {
+        log.info("Message: {}", messageParams.getMessage());
     }
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
-        return null;
+        log.info("Message Request: {}", requestParams.getMessage());
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public void logMessage(org.eclipse.lsp4j.MessageParams message) {
-        System.out.println("Log: " + message.getMessage());
+    public void logMessage(MessageParams message) {
+        log.info("Log: {}", message.getMessage());
     }
 }
