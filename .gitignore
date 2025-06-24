@@ -1,5 +1,11 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+# Ignore node_modules
+node_modules
 
-# Ignore Gradle build output directory
-build
+# Server
+lsp-server
+
+# Output
+dist
+
+# Cache
+.DS_STORE
